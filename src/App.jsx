@@ -4,8 +4,21 @@ import { Auth } from './components/Auth';
 import PomodoroTimer from './components/PomodoroTimer';
 import Tasks from './components/Tasks';  // Import the Tasks component
 import { supabase } from './supabaseClient';
+import { ThemeProvider, createTheme, CssBaseline, Button } from '@mui/material';
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
+
+  const handleThemeToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
   const [session, setSession] = useState(supabase.auth.getSession());
   const [guest, setGuest] = useState(false);
   const [user, setUser] = useState(null); // Add this state to hold the current user
@@ -33,13 +46,19 @@ function App() {
  
 
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
     <div className="App">
+    <Button variant="contained" onClick={handleThemeToggle}>
+          Toggle Theme
+        </Button>
             <Auth onSkip={handleSkip} guestMode={guest} />
             
             {guest || session ? <PomodoroTimer /> : null }
             {guest || session ? <Tasks user={user} />: null }
             
         </div>
+        </ThemeProvider>
   );
 }
 
