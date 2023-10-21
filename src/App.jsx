@@ -6,14 +6,12 @@ import Tasks from './components/Tasks';
 import { supabase } from './supabaseClient';
 import WelcomePage from './components/WelcomePage'; 
 import { ThemeProvider, createTheme, CssBaseline, IconButton, AppBar, Toolbar, Typography, TextField, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions , Button} from '@mui/material';
+
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Logout from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
-
-
-
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icon for authentication
 
 function App() {
@@ -161,12 +159,12 @@ function App() {
                             {darkMode ? (
                                 <DarkModeIcon />
                             ) : (
-                                <LightModeIcon sx={{ color: '#A1A1A1' }} />
+                                <LightModeIcon sx={{ color: '#2B2B2B' }} />
                             )}
                         </IconButton>
                         <IconButton color="primary" onClick={handleOpenSettings}>
-    <SettingsIcon />
-</IconButton>
+                      <SettingsIcon />
+                  </IconButton>
 
                     </footer>
 
