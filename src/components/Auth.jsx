@@ -11,8 +11,9 @@ export function Auth({ onSkip, guestMode }) {
 
     useEffect(() => {
         supabase.auth.onAuthStateChange((event, session) => {
+            const currentUser = session?.user;
             setSession(session);
-            console.log('Session:', session);
+            console.log("Auth Event: ", event, "Current User: ", currentUser);
         });
     }, []);
     
