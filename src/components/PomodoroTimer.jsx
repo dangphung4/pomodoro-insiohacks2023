@@ -63,7 +63,7 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
   return (
     <div>
       <Typography variant="h5" align="center" marginBottom={1}>
-        {isBreak ? "Study" : "Break"}
+        {isBreak ? "Break" : "Study"}
       </Typography>
       <Box position="relative" display="inline-flex">
         <CircularProgress
