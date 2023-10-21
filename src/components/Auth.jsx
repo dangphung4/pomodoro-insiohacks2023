@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-export function Auth() {
+export function Auth({ onSkip, guestMode }) {
     const [session, setSession] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,7 +18,6 @@ export function Auth() {
     
     
     
-    
 
     async function signUp() {
         const { error } = await supabase.auth.signUp({ email, password });
@@ -26,7 +25,7 @@ export function Auth() {
     }
 
     async function logIn() {
-        const { error } = await supabase.auth.signIn({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) console.error(error);
     }
 
@@ -38,10 +37,10 @@ export function Auth() {
     return (
         <Box component="form" autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {session ? (
-                <Button variant="contained" color="primary" onClick={logOut}>
+                <Button variant="contained" color="primary" onClick={() => supabase.auth.signOut()}>
                     Log Out
                 </Button>
-            ) : (
+            ) : !guestMode ? (
                 <>
                     <TextField
                         label="Email"
@@ -65,8 +64,11 @@ export function Auth() {
                     <Button variant="contained" color="secondary" onClick={logIn} fullWidth margin="normal">
                         Log In
                     </Button>
+                    <Button variant="outlined" onClick={onSkip} fullWidth margin="normal">
+                        Use as Guest
+                    </Button>
                 </>
-            )}
+            ) : null}
         </Box>
     );
 }
