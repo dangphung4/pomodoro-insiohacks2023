@@ -1,10 +1,9 @@
+import './Auth.css';
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import React from 'react';
-import './Auth.css';
 
 export function Auth({ onSkip, darkMode }) {
     const [session, setSession] = useState(null);
@@ -29,51 +28,75 @@ export function Auth({ onSkip, darkMode }) {
         if (error) console.error(error);
     }
 
-    async function logOut() {
-        const { error } = await supabase.auth.signOut();
-        if (error) console.error(error);
-    }
-
     return (
         <Box component="form" autoComplete="off" sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%', // Set the width of the form to 100%
+            width: '100%',
+            padding: '2rem',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            backgroundColor: darkMode ? '#2B2B2B' : '#FFFFFF',
+            overflowX: 'hidden',
         }}>
-            { !session ? (
-                <>
-                    <TextField
-                        label="Email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                        className={`auth-input ${darkMode ? 'dark-mode' : ''}`}
-                        color="login"
-                    />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                        className={`auth-input ${darkMode ? 'dark-mode' : ''}`}
-                        color="login"
-                    />
-                    <Button variant="contained" color="primary" onClick={logIn} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
+            <h1 style={{ color: darkMode ? '#FFF' : '#000', marginBottom: '1.5rem' }}>
+                Sign In
+            </h1>
+            <TextField
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                sx={{ marginBottom: '1rem', width: '100%' }}
+            />
+            <TextField
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                sx={{ marginBottom: '1.5rem', width: '100%' }}
+            />
+            <Box mt={1.5} sx={{ width: '100%' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={logIn}
+                    fullWidth
+                    style={{ background: '#606060', color: '#FFF' }}
+                >
                     Log In
                 </Button>
-                <Button variant="contained" color="primary" onClick={signUp} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
+            </Box>
+            <Box mt={1.5} sx={{ width: '100%' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={signUp}
+                    fullWidth
+                    style={{ background: '#606060', color: '#FFF' }}
+                >
                     Sign Up
                 </Button>
-                <Button variant="contained" color="primary" onClick={onSkip} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
-                    Use as Guest
-                </Button>
-                </>
-            ) : null}
+            </Box>
+            <Box mt={1.5} sx={{ width: '100%' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onSkip}
+              fullWidth
+              margin="normal"
+              style={{ background: '#606060', color: '#FFF' }}
+            >
+              Use as Guest
+            </Button>
+          </Box>
         </Box>
     );
 }
