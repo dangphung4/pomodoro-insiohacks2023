@@ -44,8 +44,7 @@ function App() {
   const [timerLength, setTimerLength] = useState(25); // Default to 25 minutes
   const [breakLength, setBreakLength] = useState(5); // Default to 5 minutes break
   const [tempCustomPlaylistURL, setTempCustomPlaylistURL] = useState(""); // Temporary custom playlist URL
-  const [customPlaylistURL, setCustomPlaylistURL] = useState(""); 
-
+  const [customPlaylistURL, setCustomPlaylistURL] = useState("");
 
   const theme = createTheme({
     palette: {
@@ -80,7 +79,6 @@ function App() {
     }
     return null;
   };
-
 
   const handleThemeToggle = () => {
     setDarkMode(!darkMode);
@@ -147,16 +145,18 @@ function App() {
   const handleSaveSettings = (newTimerLength, newBreakLength) => {
     setTimerLength(newTimerLength);
     setBreakLength(newBreakLength);
-    
+
     const extractedURL = extractPlaylistID(tempCustomPlaylistURL);
     if (extractedURL) {
       setCustomPlaylistURL(extractedURL);
     } else {
       // Handle the case where the URL is invalid
       // You can show an error message or reset to a default URL
-      setCustomPlaylistURL("https://mtyy3u5dh5.execute-api.us-east-1.amazonaws.com/dev/api/lofi");
+      setCustomPlaylistURL(
+        "https://mtyy3u5dh5.execute-api.us-east-1.amazonaws.com/dev/api/lofi"
+      );
     }
-    
+
     handleCloseSettings();
   };
 
@@ -203,15 +203,18 @@ function App() {
               <div className="tasks-section">
                 {guest || session ? <Tasks user={user} /> : null}
               </div>
-              
             </div>
             <div className="music-section">
-            {guest || session ? ( // Conditionally render MusicPlayer
-    <MusicPlayer playlistURL={customPlaylistURL || "https://mtyy3u5dh5.execute-api.us-east-1.amazonaws.com/dev/api/lofi"} />
-  ) : null}
-  </div>
+              {guest || session ? ( // Conditionally render MusicPlayer
+                <MusicPlayer
+                  playlistURL={
+                    customPlaylistURL ||
+                    "https://mtyy3u5dh5.execute-api.us-east-1.amazonaws.com/dev/api/lofi"
+                  }
+                />
+              ) : null}
+            </div>
             <footer className="footer-section">
-              
               <IconButton color="primary" onClick={handleThemeToggle}>
                 {darkMode ? (
                   <DarkModeIcon />
