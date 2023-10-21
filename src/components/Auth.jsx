@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import React from 'react';
 import './Auth.css';
 
-export function Auth({ onSkip, guestMode, darkMode }) {
+export function Auth({ onSkip, darkMode }) {
     const [session, setSession] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -41,11 +41,7 @@ export function Auth({ onSkip, guestMode, darkMode }) {
             alignItems: 'center',
             width: '100%', // Set the width of the form to 100%
         }}>
-            {session ? (
-                <Button variant="contained" color="primary" onClick={() => supabase.auth.signOut()} className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
-                    Log Out
-                </Button>
-            ) : !guestMode ? (
+            { !session ? (
                 <>
                     <TextField
                         label="Email"
