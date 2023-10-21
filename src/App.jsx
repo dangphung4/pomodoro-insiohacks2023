@@ -54,7 +54,7 @@ function App() {
         </Button>
             <Auth onSkip={handleSkip} guestMode={guest} />
             
-            {guest || session ? <PomodoroTimer /> : null }
+            {guest || session ? <PomodoroTimer  /> : null }
             {guest || session ? <Tasks user={user} />: null }
             
         </div>
