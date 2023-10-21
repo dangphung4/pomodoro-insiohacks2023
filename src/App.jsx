@@ -120,6 +120,7 @@ function App() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setShowWelcome(true);
+    setGuest(false); 
   };
   return (
     <ThemeProvider theme={theme}>
