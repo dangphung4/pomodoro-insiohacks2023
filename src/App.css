@@ -38,6 +38,11 @@ header {
    justify-content: center; 
    align-items: center;
 }
+.music-section {
+    display: flex;
+   justify-content: center; 
+   align-items: center;
+}
 
 .MuiDialogTitle-root {
     padding-top: 1000px;  /* Adjust this value as needed */
