@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Auth } from "./components/Auth";
@@ -30,6 +31,7 @@ import Logout from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Icon for authentication
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -168,76 +170,65 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div className="App">
-        {showWelcome ? (
-          <WelcomePage onGetStarted={handleGetStarted} />
-        ) : (
-          <>
-            <AppBar position="static">
-              <Toolbar>
-                <Typography variant="h5" align="center" style={{ flexGrow: 1 }}>
-                  Productivity Pom
-                </Typography>
-                {session ? (
-                  <IconButton color="inherit" onClick={handleSignOut}>
-                    <ExitToAppIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton color="primary" onClick={handleOpenAuthDialog}>
-                    <AccountCircleIcon sx={{ color: "#A1A1A1" }} />
-                  </IconButton>
-                )}
-              </Toolbar>
-            </AppBar>
-            <div className="main-content">
-              <div className="timer-section">
-                {guest || session ? (
-                  <PomodoroTimer
-                    key={timerLength}
-                    timerLength={timerLength}
-                    breakLength={breakLength}
-                  />
-                ) : null}
-              </div>
-              <div className="tasks-section">
-                {guest || session ? <Tasks user={user} /> : null}
-              </div>
-              
-            </div>
-            <div className="music-section">
-            {guest || session ? ( // Conditionally render MusicPlayer
-    <MusicPlayer playlistURL={customPlaylistURL || "https://mtyy3u5dh5.execute-api.us-east-1.amazonaws.com/dev/api/lofi"} />
-  ) : null}
-  </div>
-            <footer className="footer-section">
-              
-              <IconButton color="primary" onClick={handleThemeToggle}>
-                {darkMode ? (
-                  <DarkModeIcon />
-                ) : (
-                  <LightModeIcon sx={{ color: "#A1A1A1" }} />
-                )}
-              </IconButton>
-              <IconButton color="primary" onClick={handleOpenSettings}>
-                <SettingsIcon />
-              </IconButton>
-            </footer>
 
-            <Dialog
-              open={authDialogOpen}
-              onClose={handleCloseAuthDialog}
-              maxWidth="100%"
-            >
-              <DialogContent sx={{ padding: "25% 85px" }}>
-                <Auth
-                  onSkip={handleSkip}
-                  guestMode={guest}
-                  darkMode={darkMode}
-                />
-              </DialogContent>
-            </Dialog>
 
+        <CssBaseline />
+        <div className="App">
+            {showWelcome ? (
+                <WelcomePage onGetStarted={handleGetStarted} />
+            ) : (
+                <>
+                    <AppBar position="static">
+                        <Toolbar>
+                            <Typography variant="h5" align="center" style={{ flexGrow: 1 }}>
+                                Productivity Pom
+                            </Typography>
+                            {session ? (
+                                <IconButton color="inherit" onClick={handleSignOut}>
+                                    <ExitToAppIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton color="primary" onClick={handleOpenAuthDialog}>
+                                    <AccountCircleIcon sx={{ color: '#A1A1A1' }}/>
+                                </IconButton>
+                            )}
+                        </Toolbar>
+                    </AppBar>
+                    <div className="main-content">
+                        <div className="timer-section">
+                            {guest || session ? <PomodoroTimer key={timerLength} timerLength={timerLength} breakLength={breakLength} />
+
+ : null}
+                        </div>
+                        <div className="tasks-section">
+                            {guest || session ? <Tasks user={user} /> : null}
+                        </div>
+                    </div>
+                    <footer className="footer-section">
+                        <IconButton color="primary" onClick={handleThemeToggle}>
+                            {darkMode ? (
+                                <DarkModeIcon />
+                            ) : (
+                                <LightModeIcon sx={{ color: '#2B2B2B' }} />
+                            )}
+                        </IconButton>
+                        <IconButton color="primary" onClick={handleOpenSettings}>
+                      <SettingsIcon />
+                  </IconButton>
+
+                    </footer>
+
+                    <Dialog
+                        open={authDialogOpen}
+                        onClose={handleCloseAuthDialog}
+                        maxWidth="100%" 
+                    >
+                        <DialogContent sx={{ padding: '25% 85px' }}>
+                            <Auth onSkip={handleSkip} guestMode={guest} darkMode={darkMode} />
+                        </DialogContent>
+                    </Dialog>
+                </>
+            )}
             <Dialog open={settingsOpen} onClose={handleCloseSettings}>
               <Typography
                 variant="h5"

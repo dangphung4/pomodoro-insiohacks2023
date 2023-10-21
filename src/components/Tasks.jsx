@@ -127,19 +127,25 @@ export function Tasks({ user }) {
   return (
     <div className="tasks">
       <div className="add-task">
+        <box sx={{ width: '100%' }}>
         <TextField
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label="Title"
         />
+        </box>
+        <box sx={{ width: '100%' }}>
         <TextField
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           label="Description"
         />
+        </box>
+        <box  sx={{ width: '100%' }}>
         <Button startIcon={<AddCircleOutlineIcon />} onClick={addTask}>
           Add Task
         </Button>
+        </box>
       </div>
       <div className="task-list">
         {tasks
