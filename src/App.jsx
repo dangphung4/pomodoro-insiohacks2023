@@ -128,7 +128,7 @@ function App() {
                     <AppBar position="static">
                         <Toolbar>
                             <Typography variant="h5" align="center" style={{ flexGrow: 1 }}>
-                                Slitherman Pomodoro
+                                Productivity Pom
                             </Typography>
                             {session ? (
                                 <IconButton color="inherit" onClick={() => supabase.auth.signOut()}>
