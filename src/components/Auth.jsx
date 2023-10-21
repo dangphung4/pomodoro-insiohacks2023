@@ -3,8 +3,10 @@ import { supabase } from '../supabaseClient';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import React from 'react';
+import './Auth.css';
 
-export function Auth({ onSkip, guestMode }) {
+export function Auth({ onSkip, guestMode, darkMode }) {
     const [session, setSession] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,9 +18,6 @@ export function Auth({ onSkip, guestMode }) {
             console.log("Auth Event: ", event, "Current User: ", currentUser);
         });
     }, []);
-    
-    
-    
 
     async function signUp() {
         const { error } = await supabase.auth.signUp({ email, password });
@@ -36,9 +35,14 @@ export function Auth({ onSkip, guestMode }) {
     }
 
     return (
-        <Box component="form" autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box component="form" autoComplete="off" sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%', // Set the width of the form to 100%
+        }}>
             {session ? (
-                <Button variant="contained" color="primary" onClick={() => supabase.auth.signOut()}>
+                <Button variant="contained" color="primary" onClick={() => supabase.auth.signOut()} className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
                     Log Out
                 </Button>
             ) : !guestMode ? (
@@ -50,6 +54,8 @@ export function Auth({ onSkip, guestMode }) {
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
                         margin="normal"
+                        className={`auth-input ${darkMode ? 'dark-mode' : ''}`}
+                        color="login"
                     />
                     <TextField
                         label="Password"
@@ -58,16 +64,18 @@ export function Auth({ onSkip, guestMode }) {
                         onChange={(e) => setPassword(e.target.value)}
                         fullWidth
                         margin="normal"
+                        className={`auth-input ${darkMode ? 'dark-mode' : ''}`}
+                        color="login"
                     />
-                    <Button variant="contained" color="primary" onClick={signUp} fullWidth margin="normal">
-                        Sign Up
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={logIn} fullWidth margin="normal">
-                        Log In
-                    </Button>
-                    <Button variant="outlined" onClick={onSkip} fullWidth margin="normal">
-                        Use as Guest
-                    </Button>
+                    <Button variant="contained" color="primary" onClick={logIn} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
+                    Log In
+                </Button>
+                <Button variant="contained" color="primary" onClick={signUp} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
+                    Sign Up
+                </Button>
+                <Button variant="contained" color="primary" onClick={onSkip} fullWidth margin="normal" className={`auth-button ${darkMode ? 'dark-mode' : ''}`}>
+                    Use as Guest
+                </Button>
                 </>
             ) : null}
         </Box>
