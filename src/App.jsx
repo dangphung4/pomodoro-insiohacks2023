@@ -1,15 +1,28 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Auth } from './components/Auth';
 import PomodoroTimer from './components/PomodoroTimer';
 import Tasks from './components/Tasks';  // Import the Tasks component
 import { supabase } from './supabaseClient';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, ThemeContext } from './themeContext';
+import CssBaseline from '@mui/material/CssBaseline';
+
 
 function App() {
+  const themeContext = React.useContext(ThemeContext);
+  const darkMode = themeContext.darkMode;
+
+
+  const muiTheme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
   const [session, setSession] = useState(supabase.auth.getSession());
   const [guest, setGuest] = useState(false);
   const [user, setUser] = useState(null); // Add this state to hold the current user
-
+  
 
   useEffect(() => {
 
@@ -33,6 +46,9 @@ function App() {
  
 
   return (
+    <MuiThemeProvider theme={muiTheme}>
+    <CssBaseline />
+        <CssBaseline />
     <div className="App">
             <Auth onSkip={handleSkip} guestMode={guest} />
             
@@ -40,6 +56,7 @@ function App() {
             {guest || session ? <Tasks user={user} />: null }
             
         </div>
+        </MuiThemeProvider>
   );
 }
 
