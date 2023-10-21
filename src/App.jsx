@@ -117,6 +117,10 @@ function App() {
       handleCloseSettings();
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setShowWelcome(true);
+  };
   return (
     <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -131,7 +135,7 @@ function App() {
                                 Productivity Pom
                             </Typography>
                             {session ? (
-                                <IconButton color="inherit" onClick={() => supabase.auth.signOut()}>
+                                <IconButton color="inherit" onClick={handleSignOut}>
                                     <ExitToAppIcon />
                                 </IconButton>
                             ) : (
