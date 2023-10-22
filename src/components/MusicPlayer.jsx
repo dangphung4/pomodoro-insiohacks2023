@@ -133,39 +133,34 @@ const MusicPlayer = ({ playlistURL }) => {
       />
       <Card
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
           padding: "10px",
         }}
       >
-        <CardMedia
-          component="img"
-          image={currentTrack?.snippet?.thumbnails?.medium?.url || ""}
-          alt={currentTrack?.snippet?.title || ""}
-          style={{ width: "60px", height: "60px", flex: 1 }}  // <-- Adjusted here
+        <div style={{ marginBottom: "10px" }}>
+          <CardMedia
+            component="img"
+            image={currentTrack?.snippet?.thumbnails?.medium?.url || ""}
+            alt={currentTrack?.snippet?.title || ""}
+            style={{ width: "60px", height: "60px", margin: "0 auto" }}
           />
-        <CardContent
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            
-          }}
-        >
-          <Typography
-            variant="subtitle1"
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "80%",
-            }}
-          >
-            {currentTrack?.snippet?.title}
-          </Typography>
-        </CardContent>
-
-        <Grid container alignItems="center" spacing={2}>
+          <CardContent>
+            <Typography
+              variant="subtitle1"
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "100%",
+                textAlign: "center",
+                cursor: "pointer", // To indicate that the text can be scrolled
+              }}
+            >
+              {currentTrack?.snippet?.title}
+            </Typography>
+          </CardContent>
+        </div>
+  
+        <Grid container alignItems="center" spacing={2} justifyContent="center">
           <Grid item>
             <IconButton onClick={playPrev}>
               <SkipPreviousIcon />
@@ -203,6 +198,7 @@ const MusicPlayer = ({ playlistURL }) => {
       </Card>
     </div>
   );
+  
 };
 
 export default MusicPlayer;

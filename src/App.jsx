@@ -59,8 +59,11 @@ function App() {
         main: darkMode ? "#A3A3A3" : "#A3A3A3",
       },
     },
+    //"Space Grotesk",sans-serif
+    // fontFamily: "'Nunito', sans-serif", 
+
     typography: {
-      fontFamily: "Inter, sans-serif",
+      fontFamily: "Space Grotesk, sans-serif", 
       h1: {
         fontSize: "1rem",
       },
@@ -229,16 +232,16 @@ function App() {
 
             <Dialog
               open={authDialogOpen}
-              onClose={handleCloseAuthDialog}
+              onClose={() => {
+                if (session || guest) {
+                  handleCloseAuthDialog();
+                }
+              }}
               maxWidth="100%"
+              disableBackdropClick={!session && !guest}
+              disableEscapeKeyDown={!session && !guest}
             >
-              <DialogContent sx={{ padding: "25% 85px" }}>
-                <Auth
-                  onSkip={handleSkip}
-                  guestMode={guest}
-                  darkMode={darkMode}
-                />
-              </DialogContent>
+              <Auth onSkip={handleSkip} guestMode={guest} darkMode={darkMode} />
             </Dialog>
 
             <Dialog open={settingsOpen} onClose={handleCloseSettings}>
