@@ -52,18 +52,29 @@ const MusicPlayer = ({ playlistURL }) => {
 
   useEffect(() => {
     if (shuffle) {
-      // Shuffle the playlist when shuffle mode is enabled
-      const shuffledCopy = [...shuffledPlaylist];
-      for (let i = shuffledCopy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledCopy[i], shuffledCopy[j]] = [shuffledCopy[j], shuffledCopy[i]];
-      }
-      setShuffledPlaylist(shuffledCopy);
+        // Store the current song's ID
+        const currentSongID = shuffledPlaylist[currentTrackIndex]?.snippet?.resourceId?.videoId;
+
+        // Shuffle the playlist
+        const shuffledCopy = [...originalPlaylist];
+        for (let i = shuffledCopy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledCopy[i], shuffledCopy[j]] = [shuffledCopy[j], shuffledCopy[i]];
+        }
+        setShuffledPlaylist(shuffledCopy);
+
+        // Set the current track index to the shuffled position of the current song
+        const newIndex = shuffledCopy.findIndex(track => track.snippet.resourceId.videoId === currentSongID);
+        setCurrentTrackIndex(newIndex !== -1 ? newIndex : 0);
     } else {
-      // If shuffle mode is disabled, revert to the original playlist order
-      setShuffledPlaylist([...originalPlaylist]);
+        // If un-shuffled, revert to the original position
+        const currentSongID = shuffledPlaylist[currentTrackIndex]?.snippet?.resourceId?.videoId;
+        const originalIndex = originalPlaylist.findIndex(track => track.snippet.resourceId.videoId === currentSongID);
+        setCurrentTrackIndex(originalIndex !== -1 ? originalIndex : 0);
+        setShuffledPlaylist([...originalPlaylist]);
     }
-  }, [shuffle, originalPlaylist]);
+}, [shuffle, originalPlaylist]);
+
 
   const handleSongChange = () => {
     setIsLoading(true);
@@ -76,41 +87,22 @@ const MusicPlayer = ({ playlistURL }) => {
 
   const playNext = () => {
     if (!isLoading) {
-      setCurrentTime(0);
-      if (shuffle) {
-        // If shuffle is enabled, generate a random index for the next track
-        const randomIndex = Math.floor(Math.random() * shuffledPlaylist.length);
-        setCurrentTrackIndex(randomIndex);
-      } else {
-        // If shuffle is disabled, increment the index
-        if (currentTrackIndex < shuffledPlaylist.length - 1) {
-          setCurrentTrackIndex(currentTrackIndex + 1);
-        } else {
-          setCurrentTrackIndex(0);
-        }
-      }
-      handleSongChange();
+        setCurrentTime(0);
+        const newIndex = (currentTrackIndex + 1) % shuffledPlaylist.length;
+        setCurrentTrackIndex(newIndex);
+        handleSongChange();
     }
-  };
+};
 
-  const playPrev = () => {
+const playPrev = () => {
     if (!isLoading) {
-      setCurrentTime(0);
-      if (shuffle) {
-        // If shuffle is enabled, generate a random index for the previous track
-        const randomIndex = Math.floor(Math.random() * shuffledPlaylist.length);
-        setCurrentTrackIndex(randomIndex);
-      } else {
-        // If shuffle is disabled, decrement the index
-        if (currentTrackIndex > 0) {
-          setCurrentTrackIndex(currentTrackIndex - 1);
-        } else {
-          setCurrentTrackIndex(shuffledPlaylist.length - 1);
-        }
-      }
-      handleSongChange();
+        setCurrentTime(0);
+        const newIndex = (currentTrackIndex - 1 + shuffledPlaylist.length) % shuffledPlaylist.length;
+        setCurrentTrackIndex(newIndex);
+        handleSongChange();
     }
-  };
+};
+
 
   const handlePlayPause = () => {
     setUserClickedPlay(true);
