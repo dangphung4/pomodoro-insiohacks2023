@@ -688,7 +688,7 @@ function App() {
   };
 
   const handleOpenSettings = () => {
-    setTempCustomPlaylistURL(""); // Set the temporary URL to the current custom URL
+    setTempCustomPlaylistURL(""); // Or "Custom Playlist URL"
     setSettingsOpen(true);
   };
 
@@ -706,14 +706,9 @@ function App() {
       setTempSelectedTheme(null);
     }
   
-  
     const extractedURL = extractPlaylistID(tempCustomPlaylistURL);
-    if (extractedURL) {
+    if (extractedURL && extractedURL !== customPlaylistURL) {
       setCustomPlaylistURL(extractedURL);
-    } else {
-      setCustomPlaylistURL(
-        ""
-      );
     }
   
     handleCloseSettings();
@@ -844,7 +839,6 @@ return (
       <DialogTitle >Settings</DialogTitle>
       <DialogContent>
         <Typography variant="h6" style={{fontWeight:"600"}} gutterBottom>
-          Audio
         </Typography>
         <div style={{ marginBottom: '20px' }}>
         <TextField

@@ -73,7 +73,7 @@ export function Auth({ onSkip, darkMode }) {
                     color="primary"
                     onClick={logIn}
                     fullWidth
-                    sx={{ backgroundColor: theme.palette.text.primary, color: theme.palette.secondary.text }}
+                    sx={{ backgroundColor: theme.palette.text.primary.secondary, color: theme.palette.secondary.text }}
                 >
                     Log In
                 </Button>
@@ -84,7 +84,7 @@ export function Auth({ onSkip, darkMode }) {
                     color="primary"
                     onClick={signUp}
                     fullWidth
-                    sx={{ backgroundColor: theme.palette.text.secondary, color: theme.palette.text.text }}
+                    sx={{ backgroundColor: theme.palette.text.secondary, color: theme.palette.primary.contrastText }}
                     >
                     Sign Up
                 </Button>
