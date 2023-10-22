@@ -26,13 +26,13 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
         });
       }, 1000);
     } else if (minutes === 0 && seconds === 0) {
-      setIsActive(false); // Stop the timer
+      setIsActive(false);
 
       if (isBreak) {
-        setIsBreak(false); // Switch to work mode
+        setIsBreak(false);
         setMinutes(timerLength);
       } else {
-        setIsBreak(true); // Switch to break mode
+        setIsBreak(true);
         setMinutes(breakLength);
       }
     } else {
@@ -56,9 +56,9 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
     setSeconds(0);
   };
 
-  const totalSeconds = timerLength * 60;
-  const elapsedSeconds = (timerLength - minutes) * 60 + seconds;
-  const progress = (elapsedSeconds / totalSeconds) * 100;
+  const currentTotalSeconds = isBreak ? breakLength * 60 : timerLength * 60;
+  const elapsedSeconds = (currentTotalSeconds - minutes * 60) - seconds;
+  const progress = (elapsedSeconds / currentTotalSeconds) * 100;
 
   return (
     <div className="pomodoro-section">
@@ -82,7 +82,7 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
           alignItems="center"
           justifyContent="center"
         >
-          <Typography variant="h2" fontWeight="500" component="div" color="textPrimary">
+          <Typography variant="h2" fontSize={"125px"} fontWeight="500" component="div" color="textPrimary">
             {String(minutes).padStart(2, "0")}:
             {String(seconds).padStart(2, "0")}
           </Typography>

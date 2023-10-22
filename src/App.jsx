@@ -34,19 +34,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Icon for authentication
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [authMenuAnchor, setAuthMenuAnchor] = useState(null); // State to manage the anchor element of the auth menu
-  const [session, setSession] = useState(supabase.auth.getSession());
-  const [guest, setGuest] = useState(false);
-  const [user, setUser] = useState(null);
-  const [authDialogOpen, setAuthDialogOpen] = useState(false); // State to manage the authentication dialog
-  const [showWelcome, setShowWelcome] = useState(true); // State to manage showing the welcome page
 
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [timerLength, setTimerLength] = useState(25); // Default to 25 minutes
-  const [breakLength, setBreakLength] = useState(5); // Default to 5 minutes break
-  const [tempCustomPlaylistURL, setTempCustomPlaylistURL] = useState(""); // Temporary custom playlist URL
-  const [customPlaylistURL, setCustomPlaylistURL] = useState("");
 
 
   const THEMES = [
@@ -185,12 +173,12 @@ function App() {
       light: {
         primary: "#6c3c9d",
         secondary: "#25cdc5",
-        text: "#555761"
+        text: "#25cdc5"
       },
       dark: {
         primary: "#555761",
-        secondary: "#25cdc5",
-        text: "#6c3c9d"
+        secondary: "#6c3c9d",
+        text: "#25cdc5"
       }
     },
     {
@@ -201,9 +189,9 @@ function App() {
         text: "#253746"
       },
       dark: {
-        primary: "#253746",
-        secondary: "#fafafa",
-        text: "#b9d9eb"
+        primary: "#b9d9eb",
+        secondary: "#253746",
+        text: "#fafafa"
       }
     },
     {
@@ -240,9 +228,9 @@ function App() {
         text: "#f5c7b8"
       },
       dark: {
-        primary: "#d4d4d4",
-        secondary: "#d4d4d4",
-        text: "#f5c7b8"
+        primary: "#f5c7b8",
+        secondary: "#f5c7b8",
+        text: "#d4d4d4"
       }
     },
     {
@@ -263,7 +251,7 @@ function App() {
       light: {
         primary: "#eceff4",
         secondary: "#2e3440",
-        text: "#242933"
+        text: "#2e3440"
       },
       dark: {
         primary: "#242933",
@@ -352,13 +340,13 @@ function App() {
     {
       name: "solarizeddark",
       light: {
-        primary: "#002b36",
-        secondary: "#fafafa",
-        text: "#1a1a1a"
+        primary: "#1a1a1a",
+        secondary: "#002b36",
+        text: "#2C2C2C"
       },
       dark: {
         primary: "#1a1a1a",
-        secondary: "#fafafa",
+        secondary: "#1a1a1a",
         text: "#002b36"
       }
     },
@@ -552,28 +540,45 @@ function App() {
         text: "#383E42"
       },
       dark: {
-        primary: "#010203",
+        primary: "#383E42",
         secondary: "#5E676E",
-        text: "#383E42"
+        text: "#010203"
       }
     },
     // Add more themes as needed
   ];
 
+  const [darkMode, setDarkMode] = useState(true);
+  const [authMenuAnchor, setAuthMenuAnchor] = useState(null); // State to manage the anchor element of the auth menu
+  const [session, setSession] = useState(supabase.auth.getSession());
+  const [guest, setGuest] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false); // State to manage the authentication dialog
+  const [showWelcome, setShowWelcome] = useState(true); // State to manage showing the welcome page
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [timerLength, setTimerLength] = useState(25); // Default to 25 minutes
+  const [breakLength, setBreakLength] = useState(5); // Default to 5 minutes break
+  const [tempCustomPlaylistURL, setTempCustomPlaylistURL] = useState(""); // Temporary custom playlist URL
+  const [customPlaylistURL, setCustomPlaylistURL] = useState("");
+
   const DEFAULT_THEME = THEMES[0];
   const [selectedTheme, setSelectedTheme] = useState(DEFAULT_THEME);
+  const [tempSelectedTheme, setTempSelectedTheme] = useState(null);
+  const themeToRender = tempSelectedTheme || selectedTheme;
+  
 
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
       primary: {
-        main: darkMode ? selectedTheme.dark.primary : selectedTheme.light.primary
+        main: darkMode ? themeToRender.dark.primary : themeToRender.light.primary
       },
       secondary: {
-        main: darkMode ? selectedTheme.dark.secondary : selectedTheme.light.secondary
+        main: darkMode ? themeToRender.dark.primary : themeToRender.light.primary
       },
       text: {
-        primary: darkMode ? selectedTheme.dark.text : selectedTheme.light.text
+        main: darkMode ? themeToRender.dark.primary : themeToRender.light.primary
       }
     },
     typography: {
@@ -593,17 +598,17 @@ function App() {
           }
   
           ::-webkit-scrollbar-track {
-            background-color: ${darkMode ? selectedTheme.dark.primary : selectedTheme.light.primary};
+            background-color: ${darkMode ? themeToRender.dark.primary : themeToRender.light.primary};
           }
   
           ::-webkit-scrollbar-thumb {
-            background-color: ${darkMode ? selectedTheme.dark.secondary : selectedTheme.light.secondary};
+            background-color: ${darkMode ? themeToRender.dark.primary : themeToRender.light.primary};
             border-radius: px;
-            border: 3px solid ${darkMode ? selectedTheme.dark.primary : selectedTheme.light.primary};
+            border: 3px solid ${darkMode ? themeToRender.dark.primary : themeToRender.light.primary};
           }
   
           ::-webkit-scrollbar-thumb:hover {
-            background-color: ${darkMode ? selectedTheme.dark.text : selectedTheme.light.text};
+            background-color: ${darkMode ? themeToRender.dark.primary : themeToRender.light.primary};
           }
         `
       }
@@ -613,10 +618,10 @@ function App() {
 
   useEffect(() => {
     const mode = darkMode ? "dark" : "light";
-    document.documentElement.style.setProperty("--theme-primary", selectedTheme[mode].primary);
-    document.documentElement.style.setProperty("--theme-secondary", selectedTheme[mode].secondary);
-    document.documentElement.style.setProperty("--theme-text", selectedTheme[mode].text);
-  }, [selectedTheme, darkMode]);
+    document.documentElement.style.setProperty("--theme-primary", themeToRender[mode].primary);
+    document.documentElement.style.setProperty("--theme-secondary", themeToRender[mode].secondary);
+    document.documentElement.style.setProperty("--theme-text", themeToRender[mode].text);
+  }, [themeToRender, darkMode]);
 
   const extractPlaylistID = (url) => {
     const match = url.match(/[?&]list=([^&]+)/);
@@ -683,7 +688,7 @@ function App() {
   };
 
   const handleOpenSettings = () => {
-    setTempCustomPlaylistURL(customPlaylistURL); // Set the temporary URL to the current custom URL
+    setTempCustomPlaylistURL(""); // Set the temporary URL to the current custom URL
     setSettingsOpen(true);
   };
 
@@ -756,7 +761,7 @@ useEffect(() => {
   document.documentElement.style.setProperty("--theme-text", selectedTheme[mode].text);
 }, [selectedTheme, darkMode]);
 
-const [tempSelectedTheme, setTempSelectedTheme] = useState(null);
+
 
 
 
@@ -833,7 +838,9 @@ return (
           <Auth onSkip={handleSkip} guestMode={guest} darkMode={darkMode} />
         </Dialog>
 
-        <Dialog open={settingsOpen} onClose={handleCloseSettings}>
+        <Dialog open={settingsOpen} onClose={handleCloseSettings} BackdropProps={{ 
+       style: { backgroundColor: 'rgba(0, 0, 0, 0.2)' } 
+   }}>
       <DialogTitle >Settings</DialogTitle>
       <DialogContent>
         <Typography variant="h6" style={{fontWeight:"600"}} gutterBottom>
@@ -863,6 +870,7 @@ return (
 <TextField
   label="Custom Playlist URL"
   fullWidth
+  defaultValue=""
   value={tempCustomPlaylistURL}
   onChange={(e) => setTempCustomPlaylistURL(e.target.value)}
   style={{ marginTop: '10px', color: theme.palette.text.secondary }} // added color property here

@@ -17,13 +17,14 @@ import ShuffleIcon from "@mui/icons-material/Shuffle";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import YouTube from "react-youtube";
+import zIndex from "@mui/material/styles/zIndex";
 
 const MusicPlayer = ({ playlistURL }) => {
   const [originalPlaylist, setOriginalPlaylist] = useState([]);
   const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [userClickedPlay, setUserClickedPlay] = useState(false); 
+  const [userClickedPlay, setUserClickedPlay] = useState(false);
   const [volume, setVolume] = useState(50); // Default volume
   const [isMuted, setIsMuted] = useState(false);
   const [shuffle, setShuffle] = useState(false); // State for shuffle mode
@@ -32,8 +33,8 @@ const MusicPlayer = ({ playlistURL }) => {
   const [duration, setDuration] = useState(1);
   const [userIsScrubbing, setUserIsScrubbing] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
+  const [userScrubbedFirst, setUserScrubbedFirst] = useState(false);
 
-  
 
   const updateIntervalRef = useRef(null); //ref to store the interval ID
 
@@ -53,18 +54,29 @@ const MusicPlayer = ({ playlistURL }) => {
 
   useEffect(() => {
     if (shuffle) {
-      // Shuffle the playlist when shuffle mode is enabled
-      const shuffledCopy = [...shuffledPlaylist];
-      for (let i = shuffledCopy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledCopy[i], shuffledCopy[j]] = [shuffledCopy[j], shuffledCopy[i]];
-      }
-      setShuffledPlaylist(shuffledCopy);
+        // Store the current song's ID
+        const currentSongID = shuffledPlaylist[currentTrackIndex]?.snippet?.resourceId?.videoId;
+
+        // Shuffle the playlist
+        const shuffledCopy = [...originalPlaylist];
+        for (let i = shuffledCopy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledCopy[i], shuffledCopy[j]] = [shuffledCopy[j], shuffledCopy[i]];
+        }
+        setShuffledPlaylist(shuffledCopy);
+
+        // Set the current track index to the shuffled position of the current song
+        const newIndex = shuffledCopy.findIndex(track => track.snippet.resourceId.videoId === currentSongID);
+        setCurrentTrackIndex(newIndex !== -1 ? newIndex : 0);
     } else {
-      // If shuffle mode is disabled, revert to the original playlist order
-      setShuffledPlaylist([...originalPlaylist]);
+        // If un-shuffled, revert to the original position
+        const currentSongID = shuffledPlaylist[currentTrackIndex]?.snippet?.resourceId?.videoId;
+        const originalIndex = originalPlaylist.findIndex(track => track.snippet.resourceId.videoId === currentSongID);
+        setCurrentTrackIndex(originalIndex !== -1 ? originalIndex : 0);
+        setShuffledPlaylist([...originalPlaylist]);
     }
-  }, [shuffle, originalPlaylist]);
+}, [shuffle, originalPlaylist]);
+
 
   const handleSongChange = () => {
     setIsLoading(true);
@@ -77,57 +89,42 @@ const MusicPlayer = ({ playlistURL }) => {
 
   const playNext = () => {
     if (!isLoading) {
-      setCurrentTime(0);
-      if (shuffle) {
-        // If shuffle is enabled, generate a random index for the next track
-        const randomIndex = Math.floor(Math.random() * shuffledPlaylist.length);
-        setCurrentTrackIndex(randomIndex);
-      } else {
-        // If shuffle is disabled, increment the index
-        if (currentTrackIndex < shuffledPlaylist.length - 1) {
-          setCurrentTrackIndex(currentTrackIndex + 1);
-        } else {
-          setCurrentTrackIndex(0);
-        }
-      }
-      handleSongChange();
+        setCurrentTime(0);
+        const newIndex = (currentTrackIndex + 1) % shuffledPlaylist.length;
+        setCurrentTrackIndex(newIndex);
+        handleSongChange();
     }
-  };
+};
 
-  const playPrev = () => {
+const playPrev = () => {
     if (!isLoading) {
-      setCurrentTime(0);
-      if (shuffle) {
-        // If shuffle is enabled, generate a random index for the previous track
-        const randomIndex = Math.floor(Math.random() * shuffledPlaylist.length);
-        setCurrentTrackIndex(randomIndex);
-      } else {
-        // If shuffle is disabled, decrement the index
-        if (currentTrackIndex > 0) {
-          setCurrentTrackIndex(currentTrackIndex - 1);
-        } else {
-          setCurrentTrackIndex(shuffledPlaylist.length - 1);
-        }
-      }
-      handleSongChange();
+        setCurrentTime(0);
+        const newIndex = (currentTrackIndex - 1 + shuffledPlaylist.length) % shuffledPlaylist.length;
+        setCurrentTrackIndex(newIndex);
+        handleSongChange();
     }
-  };
+};
 
-  const handlePlayPause = () => {
-    setUserClickedPlay(true);
-    const player = playerRef.current;
-    if (player && playerReady) { // Check if the player is ready
-      if (!isPlaying) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
-      setIsPlaying(!isPlaying); // Toggle the isPlaying state
+
+const handlePlayPause = () => {
+  setUserClickedPlay(true);
+  const player = playerRef.current;
+  if (player && playerReady) {
+    // If the song hasn't been played before and the user has scrubbed, seek to the current slider position
+    if (!isPlaying && userScrubbedFirst) {
+      player.seekTo(currentTime);
     }
-  };
-  
 
-  
+    // Check if the player is ready
+    if (!isPlaying) {
+      player.playVideo();
+    } else {
+      player.pauseVideo();
+    }
+    setIsPlaying(!isPlaying); // Toggle the isPlaying state
+  }
+};
+
 
   useEffect(() => {
     const player = playerRef.current;
@@ -152,51 +149,49 @@ const MusicPlayer = ({ playlistURL }) => {
     setShuffle(!shuffle);
   };
 
-
   return (
     <div>
-     <YouTube
-  videoId={currentTrack?.snippet?.resourceId?.videoId}
-  opts={opts}
-  onReady={(event) => {
-    playerRef.current = event.target;
-    event.target.setVolume(isMuted ? 0 : volume);
-    setDuration(event.target.getDuration());
-    setPlayerReady(true); // Set the player as ready
-    if (isPlaying) {
-      event.target.playVideo(); // Play video if isPlaying is true
-    }
-  }}
-  
+      <YouTube
+        videoId={currentTrack?.snippet?.resourceId?.videoId}
+        opts={opts}
+        onReady={(event) => {
+          playerRef.current = event.target;
+          event.target.setVolume(isMuted ? 0 : volume);
+          setDuration(event.target.getDuration());
+          setPlayerReady(true);
+          if (isPlaying && !userScrubbedFirst) {
+            event.target.playVideo();
+          } else {
+            event.target.pauseVideo();
+          }
+        }}
+        
+        onStateChange={(event) => {
+          // Clear any existing intervals whenever the state changes
+          if (updateIntervalRef.current) {
+            clearInterval(updateIntervalRef.current);
+            updateIntervalRef.current = null;
+          }
 
-onStateChange={(event) => {
-    // Clear any existing intervals whenever the state changes
-    if (updateIntervalRef.current) {
-      clearInterval(updateIntervalRef.current);
-      updateIntervalRef.current = null;
-    }
-  
-    if (event.data === YouTube.PlayerState.PLAYING && !userIsScrubbing) {
-      setIsPlaying(true);  // Update the isPlaying state here
-      handleSongLoaded();
-      updateIntervalRef.current = setInterval(() => {
-        setCurrentTime(event.target.getCurrentTime());
-      }, 1000);
-    }
-  
-    if (event.data === YouTube.PlayerState.PAUSED) {
-      setIsPlaying(false);  // Update the isPlaying state here
-    }
-  
-    if (event.data === YouTube.PlayerState.ENDED) {
-      if (isPlaying) {
-        playNext();
-      }
-    }
-  }}
-  
-/>
+          if (event.data === YouTube.PlayerState.PLAYING && !userIsScrubbing) {
+            setIsPlaying(true); // Update the isPlaying state here
+            handleSongLoaded();
+            updateIntervalRef.current = setInterval(() => {
+              setCurrentTime(event.target.getCurrentTime());
+            }, 1000);
+          }
 
+          if (event.data === YouTube.PlayerState.PAUSED) {
+            setIsPlaying(false); // Update the isPlaying state here
+          }
+
+          if (event.data === YouTube.PlayerState.ENDED) {
+            if (isPlaying) {
+              playNext();
+            }
+          }
+        }}
+      />
 
       <Card
         style={{
@@ -204,7 +199,7 @@ onStateChange={(event) => {
           padding: "10px",
           width: "480px",
           alignItems: "center",
-          borderRadius: "5px",
+          borderRadius: "22px",
         }}
       >
         <CardMedia
@@ -231,9 +226,9 @@ onStateChange={(event) => {
           }}
         >
           <Slider
-          style={{
-            width: "90%",
-          }}
+            style={{
+              width: "90%",
+            }}
             value={currentTime}
             max={duration}
             onChange={(event, newValue) => {
@@ -243,19 +238,22 @@ onStateChange={(event) => {
                 clearInterval(updateIntervalRef.current);
                 updateIntervalRef.current = null;
               }
-            }}
-            onChangeCommitted={(event, newValue) => {
-              playerRef.current.seekTo(newValue);
-              setUserIsScrubbing(false);
-              if (
-                !updateIntervalRef.current &&
-                event.data === YouTube.PlayerState.PLAYING
-              ) {
-                updateIntervalRef.current = setInterval(() => {
-                  setCurrentTime(event.target.getCurrentTime());
-                }, 100);
+              if (!userClickedPlay) {
+                setUserScrubbedFirst(true);
               }
             }}
+            onChangeCommitted={(event, newValue) => {
+              if (userClickedPlay) {
+                playerRef.current.seekTo(newValue);
+                setUserIsScrubbing(false);
+                if (!updateIntervalRef.current) {
+                  updateIntervalRef.current = setInterval(() => {
+                    setCurrentTime(playerRef.current.getCurrentTime());
+                  }, 100);
+                }
+              }
+            }}
+            
             aria-labelledby="song-scrubber"
           />
 
@@ -288,9 +286,13 @@ onStateChange={(event) => {
               </IconButton>
             </Grid>
             <Grid item>
-            <IconButton onClick={handlePlayPause}>
-  {userClickedPlay && isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-</IconButton>
+              <IconButton onClick={handlePlayPause}>
+                {userClickedPlay && isPlaying ? (
+                  <PauseIcon />
+                ) : (
+                  <PlayArrowIcon />
+                )}
+              </IconButton>
             </Grid>
             <Grid item>
               <IconButton onClick={playNext}>
