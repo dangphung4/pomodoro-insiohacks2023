@@ -204,7 +204,7 @@ onStateChange={(event) => {
           padding: "10px",
           width: "480px",
           alignItems: "center",
-          borderRadius: "25px",
+          borderRadius: "5px",
         }}
       >
         <CardMedia
@@ -231,6 +231,9 @@ onStateChange={(event) => {
           }}
         >
           <Slider
+          style={{
+            width: "90%",
+          }}
             value={currentTime}
             max={duration}
             onChange={(event, newValue) => {

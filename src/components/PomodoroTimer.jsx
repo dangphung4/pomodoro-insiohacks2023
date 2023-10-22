@@ -61,16 +61,16 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
   const progress = (elapsedSeconds / totalSeconds) * 100;
 
   return (
-    <div>
-      <Typography variant="h5" align="center" marginBottom={1}>
+    <div className="pomodoro-section">
+      <Typography variant="h5" align="center" marginBottom={1} fontSize="3rem">
         {isBreak ? "Break" : "Study"}
       </Typography>
       <Box position="relative" display="inline-flex">
         <CircularProgress
           variant="determinate"
           value={100 - progress}
-          size={180}
-          thickness={3}
+          size={475}
+          thickness={3.5}
         />
         <Box
           top={0}
@@ -82,7 +82,7 @@ const PomodoroTimer = ({ timerLength, breakLength }) => {
           alignItems="center"
           justifyContent="center"
         >
-          <Typography variant="h3" component="div" color="textPrimary">
+          <Typography variant="h2" fontWeight="500" component="div" color="textPrimary">
             {String(minutes).padStart(2, "0")}:
             {String(seconds).padStart(2, "0")}
           </Typography>
