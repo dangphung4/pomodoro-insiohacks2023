@@ -17,13 +17,14 @@ import ShuffleIcon from "@mui/icons-material/Shuffle";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import YouTube from "react-youtube";
+import zIndex from "@mui/material/styles/zIndex";
 
 const MusicPlayer = ({ playlistURL }) => {
   const [originalPlaylist, setOriginalPlaylist] = useState([]);
   const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [userClickedPlay, setUserClickedPlay] = useState(false); 
+  const [userClickedPlay, setUserClickedPlay] = useState(false);
   const [volume, setVolume] = useState(50); // Default volume
   const [isMuted, setIsMuted] = useState(false);
   const [shuffle, setShuffle] = useState(false); // State for shuffle mode
@@ -32,8 +33,6 @@ const MusicPlayer = ({ playlistURL }) => {
   const [duration, setDuration] = useState(1);
   const [userIsScrubbing, setUserIsScrubbing] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
-
-  
 
   const updateIntervalRef = useRef(null); //ref to store the interval ID
 
@@ -116,7 +115,8 @@ const MusicPlayer = ({ playlistURL }) => {
   const handlePlayPause = () => {
     setUserClickedPlay(true);
     const player = playerRef.current;
-    if (player && playerReady) { // Check if the player is ready
+    if (player && playerReady) {
+      // Check if the player is ready
       if (!isPlaying) {
         player.playVideo();
       } else {
@@ -125,9 +125,6 @@ const MusicPlayer = ({ playlistURL }) => {
       setIsPlaying(!isPlaying); // Toggle the isPlaying state
     }
   };
-  
-
-  
 
   useEffect(() => {
     const player = playerRef.current;
@@ -152,51 +149,46 @@ const MusicPlayer = ({ playlistURL }) => {
     setShuffle(!shuffle);
   };
 
-
   return (
     <div>
-     <YouTube
-  videoId={currentTrack?.snippet?.resourceId?.videoId}
-  opts={opts}
-  onReady={(event) => {
-    playerRef.current = event.target;
-    event.target.setVolume(isMuted ? 0 : volume);
-    setDuration(event.target.getDuration());
-    setPlayerReady(true); // Set the player as ready
-    if (isPlaying) {
-      event.target.playVideo(); // Play video if isPlaying is true
-    }
-  }}
-  
+      <YouTube
+        videoId={currentTrack?.snippet?.resourceId?.videoId}
+        opts={opts}
+        onReady={(event) => {
+          playerRef.current = event.target;
+          event.target.setVolume(isMuted ? 0 : volume);
+          setDuration(event.target.getDuration());
+          setPlayerReady(true); // Set the player as ready
+          if (isPlaying) {
+            event.target.playVideo(); // Play video if isPlaying is true
+          }
+        }}
+        onStateChange={(event) => {
+          // Clear any existing intervals whenever the state changes
+          if (updateIntervalRef.current) {
+            clearInterval(updateIntervalRef.current);
+            updateIntervalRef.current = null;
+          }
 
-onStateChange={(event) => {
-    // Clear any existing intervals whenever the state changes
-    if (updateIntervalRef.current) {
-      clearInterval(updateIntervalRef.current);
-      updateIntervalRef.current = null;
-    }
-  
-    if (event.data === YouTube.PlayerState.PLAYING && !userIsScrubbing) {
-      setIsPlaying(true);  // Update the isPlaying state here
-      handleSongLoaded();
-      updateIntervalRef.current = setInterval(() => {
-        setCurrentTime(event.target.getCurrentTime());
-      }, 1000);
-    }
-  
-    if (event.data === YouTube.PlayerState.PAUSED) {
-      setIsPlaying(false);  // Update the isPlaying state here
-    }
-  
-    if (event.data === YouTube.PlayerState.ENDED) {
-      if (isPlaying) {
-        playNext();
-      }
-    }
-  }}
-  
-/>
+          if (event.data === YouTube.PlayerState.PLAYING && !userIsScrubbing) {
+            setIsPlaying(true); // Update the isPlaying state here
+            handleSongLoaded();
+            updateIntervalRef.current = setInterval(() => {
+              setCurrentTime(event.target.getCurrentTime());
+            }, 1000);
+          }
 
+          if (event.data === YouTube.PlayerState.PAUSED) {
+            setIsPlaying(false); // Update the isPlaying state here
+          }
+
+          if (event.data === YouTube.PlayerState.ENDED) {
+            if (isPlaying) {
+              playNext();
+            }
+          }
+        }}
+      />
 
       <Card
         style={{
@@ -231,6 +223,9 @@ onStateChange={(event) => {
           }}
         >
           <Slider
+            style={{
+              width: "90%",
+            }}
             value={currentTime}
             max={duration}
             onChange={(event, newValue) => {
@@ -285,9 +280,13 @@ onStateChange={(event) => {
               </IconButton>
             </Grid>
             <Grid item>
-            <IconButton onClick={handlePlayPause}>
-  {userClickedPlay && isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-</IconButton>
+              <IconButton onClick={handlePlayPause}>
+                {userClickedPlay && isPlaying ? (
+                  <PauseIcon />
+                ) : (
+                  <PlayArrowIcon />
+                )}
+              </IconButton>
             </Grid>
             <Grid item>
               <IconButton onClick={playNext}>
