@@ -1,11 +1,15 @@
 import './Auth.css';
+import { useTheme } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
+
 export function Auth({ onSkip, darkMode }) {
+    const theme = useTheme();
+
     const [session, setSession] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -33,14 +37,14 @@ export function Auth({ onSkip, darkMode }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%',
-            padding: '2rem',
-            borderRadius: '12px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            backgroundColor: darkMode ? '#2B2B2B' : '#FFFFFF',
-            overflowX: 'hidden',
+            width: '500px',
+            padding: '3.5rem',
+            borderRadius: '5px',
+            boxShadow: darkMode ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)',
+            backgroundColor: darkMode ? theme.palette.background.default : theme.palette.background.paper,
+            overflow: 'hidden',
         }}>
-            <h1 style={{ color: darkMode ? '#FFF' : '#000', marginBottom: '1.5rem' }}>
+            <h1 style={{ color: theme.palette.text.primary, marginBottom: '1.5rem' }}>
                 Sign In
             </h1>
             <TextField
@@ -51,7 +55,7 @@ export function Auth({ onSkip, darkMode }) {
                 fullWidth
                 margin="normal"
                 variant="outlined"
-                sx={{ marginBottom: '1rem', width: '100%' }}
+                sx={{ marginBottom: '.25rem', width: '100%' }}
             />
             <TextField
                 label="Password"
@@ -61,15 +65,15 @@ export function Auth({ onSkip, darkMode }) {
                 fullWidth
                 margin="normal"
                 variant="outlined"
-                sx={{ marginBottom: '1.5rem', width: '100%' }}
+                sx={{ marginBottom: '1rem', width: '100%' }}
             />
-            <Box mt={1.5} sx={{ width: '100%' }}>
+             <Box mt={1.5} sx={{ width: '100%' }}>
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={logIn}
                     fullWidth
-                    style={{ background: '#606060', color: '#FFF' }}
+                    sx={{ backgroundColor: theme.palette.text.primary, color: theme.palette.secondary.text }}
                 >
                     Log In
                 </Button>
@@ -80,23 +84,22 @@ export function Auth({ onSkip, darkMode }) {
                     color="primary"
                     onClick={signUp}
                     fullWidth
-                    style={{ background: '#606060', color: '#FFF' }}
-                >
+                    sx={{ backgroundColor: theme.palette.text.secondary, color: theme.palette.text.text }}
+                    >
                     Sign Up
                 </Button>
             </Box>
             <Box mt={1.5} sx={{ width: '100%' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onSkip}
-              fullWidth
-              margin="normal"
-              style={{ background: '#606060', color: '#FFF' }}
-            >
-              Use as Guest
-            </Button>
-          </Box>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onSkip}
+                    fullWidth
+                    sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}
+                >
+                    Use as Guest
+                </Button>
+            </Box>
         </Box>
     );
 }

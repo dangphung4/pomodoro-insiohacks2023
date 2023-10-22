@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { Task } from "./Task";
 import { Button, TextField } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
+
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export function Tasks({ user }) {
@@ -124,28 +126,59 @@ export function Tasks({ user }) {
     }
   };
 
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
+
+
+
   return (
-    <div className="tasks">
+    <div className="tasks tasks-box">
       <div className="add-task">
-        <box sx={{ width: '100%' }}>
         <TextField
+          fullWidth
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label="Title"
+          InputProps={{
+            style: {
+              color: isDarkMode ? 'white' : 'black',
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              color: isDarkMode ? 'gray' : 'black',
+            },
+            shrink: true // This ensures the label always remains in the 'shrunken' state
+          }}
         />
-        </box>
-        <box sx={{ width: '100%' }}>
         <TextField
+          fullWidth
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           label="Description"
+          InputProps={{
+            style: {
+              color: isDarkMode ? 'white' : 'black',
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              color: isDarkMode ? 'gray' : 'black',
+              marginTop: '10px' // Provides a bit of spacing between the fields
+            },
+            shrink: true // This ensures the label always remains in the 'shrunken' state
+          }}
+          style={{ marginTop: '10px' }} // Adds a bit of spacing after the Title TextField
         />
-        </box>
-        <box  sx={{ width: '100%' }}>
-        <Button startIcon={<AddCircleOutlineIcon />} onClick={addTask}>
-          Add Task
-        </Button>
-        </box>
+        <div style={{ marginTop: '10px' }}>
+          <Button fullWidth startIcon={<AddCircleOutlineIcon />} onClick={addTask}
+            style={{
+              backgroundColor: theme.palette.secondary.main,
+              color: theme.palette.text.primary,
+            }}>
+            Add Task
+          </Button>
+        </div>
       </div>
       <div className="task-list">
         {tasks
@@ -163,6 +196,6 @@ export function Tasks({ user }) {
           ))}
       </div>
     </div>
-  );
+);
 }
 export default Tasks;

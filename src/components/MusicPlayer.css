@@ -6,6 +6,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     font-family: Arial, sans-serif;
     color: white;
+    display: flex;
+    align-items: center;
 }
 
 .music-player img {
@@ -17,7 +19,7 @@
 }
 
 .music-player h4 {
-    margin-left: 80px;
+    margin-left: 20px;
 }
 
 .music-player button {
