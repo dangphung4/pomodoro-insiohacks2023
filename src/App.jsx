@@ -1,6 +1,4 @@
-import { inject } from '@vercel/analytics';
-inject();
-
+import { Analytics } from '@vercel/analytics/react';
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Auth } from "./components/Auth";
@@ -790,7 +788,9 @@ useEffect(() => {
 
 
 return (
+  
   <ThemeProvider theme={theme}>
+     <Analytics />
     <CssBaseline />
     <div className="App">
       {showWelcome ? (
