@@ -7,6 +7,12 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { CircularProgress, Snackbar, Alert } from '@mui/material';
 import { isEmail } from 'validator';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 
 
 export function Auth({ onSkip, darkMode }) {
@@ -21,6 +27,9 @@ export function Auth({ onSkip, darkMode }) {
     const [message, setMessage] = useState('');  // To store the message
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+
+    const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+
 
 
     useEffect(() => {
@@ -77,6 +86,28 @@ export function Auth({ onSkip, darkMode }) {
         return isValid;
     }
 
+    async function handleForgotPassword() {
+        if (!isEmail(email)) {
+            setMessage('Please enter a valid email address.');
+            setSnackbarOpen(true);
+            return;
+        }
+        
+        // Specify the redirectTo URL
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'http://example.com/account/update-password', // Update with your actual URL
+        });
+        
+        if (error) {
+            setMessage(error.message);
+        } else {
+            setMessage('Password reset link has been sent to your email address.');
+        }
+        setSnackbarOpen(true);
+        setForgotPasswordOpen(false);
+    }
+    
+
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -84,7 +115,9 @@ export function Auth({ onSkip, darkMode }) {
         setSnackbarOpen(false);
     };
 
+
     return (
+        
         <Box component="form" autoComplete="off" sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -123,6 +156,47 @@ export function Auth({ onSkip, darkMode }) {
                 variant="outlined"
                 sx={{ marginBottom: '1rem', width: '100%' }}
             />
+             {/* Forgot Password Button */}
+    <Button 
+    style={{ color: theme.palette.text.primary }} 
+    onClick={() => setForgotPasswordOpen(true)} 
+        disabled={loading}
+    >
+        Forgot Password?
+    </Button>
+
+    {/* Forgot Password Dialog */}
+    <Dialog open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)}>
+    <DialogTitle>
+        <Typography variant="h6" sx={{ color: theme.palette.text.primary}}>
+            Forgot Password
+        </Typography>
+    </DialogTitle>
+    <DialogContent>
+        <DialogContentText>
+            Enter your email address and we will send you a link to reset your password.
+        </DialogContentText>
+        <TextField 
+            autoFocus
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={Boolean(emailError)}
+            helperText={emailError}
+        />
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={() => setForgotPasswordOpen(false)} color="primary">
+            Cancel
+        </Button>
+        <Button onClick={handleForgotPassword} color="primary">
+            Send Reset Link
+        </Button>
+    </DialogActions>
+</Dialog>
             <Box mt={1.5} sx={{ width: '100%' }}>
             <Button
                 variant="contained"
