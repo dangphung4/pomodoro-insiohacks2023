@@ -134,3 +134,63 @@ header {
     margin-top: 0;
     margin-bottom: 30px;
 }
+
+/* Default styles for larger screens are already defined in your CSS */
+
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+   .App {
+       flex-direction: column;
+   }
+
+   .timer-section, 
+   .tasks-section, 
+   .music-section {
+       width: 100%;
+   }
+
+   .tasks-box {
+       position: static;
+       width: 100%;
+       height: auto;
+       margin-top: 20px;
+   }
+
+   .pomodoro-section {
+       position: static;
+       width: 100%;
+   }
+
+   .task-index {
+       margin: 10px 0;
+   }
+}
+
+/* Media Query for Tablet Devices */
+@media (min-width: 481px) and (max-width: 768px) {
+   .App {
+       flex-direction: column;
+   }
+
+   .timer-section, 
+   .tasks-section, 
+   .music-section {
+       width: 100%;
+   }
+
+   .tasks-box {
+       position: static;
+       width: 100%;
+       height: auto;
+       margin-top: 20px;
+   }
+
+   .pomodoro-section {
+       position: static;
+       width: 100%;
+   }
+
+   .task-index {
+       margin: 15px 0;
+   }
+}

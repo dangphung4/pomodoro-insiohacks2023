@@ -566,6 +566,10 @@ function App() {
   const [selectedTheme, setSelectedTheme] = useState(DEFAULT_THEME);
   const [tempSelectedTheme, setTempSelectedTheme] = useState(null);
   const themeToRender = tempSelectedTheme || selectedTheme;
+
+  const [tempTimerLength, setTempTimerLength] = useState(timerLength);
+  const [tempBreakLength, setTempBreakLength] = useState(breakLength);
+
   
 
   const theme = createTheme({
@@ -688,7 +692,9 @@ function App() {
   };
 
   const handleOpenSettings = () => {
-    setTempCustomPlaylistURL(""); // Set the temporary URL to the current custom URL
+    setTempTimerLength(timerLength);
+    setTempBreakLength(breakLength);
+    setTempCustomPlaylistURL(""); // Or "Custom Playlist URL"
     setSettingsOpen(true);
   };
 
@@ -697,23 +703,18 @@ function App() {
     setSettingsOpen(false);
   };
 
-  const handleSaveSettings = (newTimerLength, newBreakLength) => {
-    setTimerLength(newTimerLength);
-    setBreakLength(newBreakLength);
+  const handleSaveSettings = () => {
+    setTimerLength(tempTimerLength);
+    setBreakLength(tempBreakLength);
   
     if (tempSelectedTheme) {
       setSelectedTheme(tempSelectedTheme);
       setTempSelectedTheme(null);
     }
   
-  
     const extractedURL = extractPlaylistID(tempCustomPlaylistURL);
-    if (extractedURL) {
+    if (extractedURL && extractedURL !== customPlaylistURL) {
       setCustomPlaylistURL(extractedURL);
-    } else {
-      setCustomPlaylistURL(
-        ""
-      );
     }
   
     handleCloseSettings();
@@ -844,14 +845,13 @@ return (
       <DialogTitle >Settings</DialogTitle>
       <DialogContent>
         <Typography variant="h6" style={{fontWeight:"600"}} gutterBottom>
-          Audio
         </Typography>
         <div style={{ marginBottom: '20px' }}>
         <TextField
   label="Timer Length (minutes)"
   type="number"
-  value={timerLength}
-  onChange={(e) => setTimerLength(e.target.value)}
+  value={tempTimerLength}
+  onChange={(e) => setTempTimerLength(e.target.value)}
   style={{ marginRight: '10px', color: theme.palette.text.secondary }} // added color property here
   InputLabelProps={{
     style: { color: theme.palette.text.secondary } // setting the color for the label text
@@ -860,8 +860,8 @@ return (
 <TextField
   label="Break Length (minutes)"
   type="number"
-  value={breakLength}
-  onChange={(e) => setBreakLength(e.target.value)}
+  value={tempBreakLength}
+    onChange={(e) => setTempBreakLength(e.target.value)}
   style={{ marginRight: '10px',color: theme.palette.text.secondary }} // added color property here
   InputLabelProps={{
     style: { color: theme.palette.text.secondary } // setting the color for the label text
