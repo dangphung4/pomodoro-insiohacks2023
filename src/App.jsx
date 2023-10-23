@@ -757,7 +757,7 @@ const handleThemeToggle = () => {
       variant="contained"
       style={{
         margin: '5px',
-        width: '150px',
+        width: '30%',
         height: '50px',
         fontSize: '11.5px',
         backgroundColor: darkMode ? theme.dark.primary : theme.light.primary,
@@ -869,13 +869,13 @@ return (
       <DialogContent>
         <Typography variant="h6" style={{fontWeight:"600"}} gutterBottom>
         </Typography>
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '20px', width: '510px'}}>
         <TextField
   label="Timer Length (minutes)"
   type="number"
   value={tempTimerLength}
   onChange={(e) => setTempTimerLength(e.target.value)}
-  style={{ marginRight: '10px', color: theme.palette.text.secondary }} // added color property here
+  style={{ marginRight: '10px', color: theme.palette.text.secondary, width: '240px' }} // added color property here
   InputLabelProps={{
     style: { color: theme.palette.text.secondary } // setting the color for the label text
   }}
@@ -885,7 +885,7 @@ return (
   type="number"
   value={tempBreakLength}
     onChange={(e) => setTempBreakLength(e.target.value)}
-  style={{ marginRight: '10px',color: theme.palette.text.secondary }} // added color property here
+  style={{ marginRight: '10px',color: theme.palette.text.secondary, width: '250px'}} // added color property here
   InputLabelProps={{
     style: { color: theme.palette.text.secondary } // setting the color for the label text
   }}
