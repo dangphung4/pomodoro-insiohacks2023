@@ -1,3 +1,6 @@
+import { inject } from '@vercel/analytics';
+inject();
+
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Auth } from "./components/Auth";
@@ -636,11 +639,30 @@ function App() {
     return null;
   };
 
+  useEffect(() => {
+    const savedThemeName = localStorage.getItem('theme');
+    const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
+
+    if (savedThemeName) {
+        const foundTheme = THEMES.find(theme => theme.name === savedThemeName);
+        if (foundTheme) {
+            setSelectedTheme(foundTheme);
+        }
+    }
+
+    if (typeof savedDarkMode === 'boolean') {
+        setDarkMode(savedDarkMode);
+    }
+}, []);
+
   
 
-  const handleThemeToggle = () => {
-    setDarkMode(!darkMode);
-  };
+const handleThemeToggle = () => {
+  const newDarkMode = !darkMode;
+  setDarkMode(newDarkMode);
+  localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+};
+
 
   const handleOpenAuthMenu = (event) => {
     setAuthMenuAnchor(event.currentTarget); // Open the auth menu
@@ -708,17 +730,19 @@ function App() {
     setBreakLength(tempBreakLength);
   
     if (tempSelectedTheme) {
-      setSelectedTheme(tempSelectedTheme);
-      setTempSelectedTheme(null);
+        setSelectedTheme(tempSelectedTheme);
+        localStorage.setItem('theme', tempSelectedTheme.name); // Save the theme to localStorage
+        setTempSelectedTheme(null);
     }
   
     const extractedURL = extractPlaylistID(tempCustomPlaylistURL);
     if (extractedURL && extractedURL !== customPlaylistURL) {
-      setCustomPlaylistURL(extractedURL);
+        setCustomPlaylistURL(extractedURL);
     }
   
     handleCloseSettings();
-  };
+};
+
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -761,7 +785,6 @@ useEffect(() => {
   document.documentElement.style.setProperty("--theme-secondary", selectedTheme[mode].secondary);
   document.documentElement.style.setProperty("--theme-text", selectedTheme[mode].text);
 }, [selectedTheme, darkMode]);
-
 
 
 
