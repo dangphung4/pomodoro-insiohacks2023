@@ -95,7 +95,7 @@ export function Auth({ onSkip, darkMode }) {
         
         // Specify the redirectTo URL
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'http://example.com/account/update-password', // Update with your actual URL
+            redirectTo: 'https://www.pomotivity.com/reset-password', 
         });
         
         if (error) {
@@ -106,6 +106,15 @@ export function Auth({ onSkip, darkMode }) {
         setSnackbarOpen(true);
         setForgotPasswordOpen(false);
     }
+
+    async function updatePassword(newPassword) {
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+            console.error(error);
+        } else {
+            console.log('Password updated successfully!');
+        }
+    }    
     
 
     const handleCloseSnackbar = (event, reason) => {
