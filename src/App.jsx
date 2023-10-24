@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Auth } from "./components/Auth";
@@ -7,6 +8,8 @@ import Tasks from "./components/Tasks";
 import { supabase } from "./supabaseClient";
 import WelcomePage from "./components/WelcomePage";
 import MusicPlayer from "./components/MusicPlayer";
+import ResetPassword from './components/ResetPassword';  
+
 import {
   ThemeProvider,
   createTheme,
@@ -32,7 +35,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useTheme } from '@mui/material/styles';
 import Logout from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Icon for authentication
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function App() {
 
@@ -792,7 +795,14 @@ return (
   <ThemeProvider theme={theme}>
      <Analytics />
     <CssBaseline />
+    <Router>
     <div className="App">
+    <Routes>
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="*"
+            element={
+              <>  
       {showWelcome ? (
         <WelcomePage onGetStarted={handleGetStarted} />
       ) : (
@@ -921,11 +931,16 @@ return (
        SAVE 
         </Button>
       </DialogActions>
-    </Dialog>
-    </>
-     )}
-  </div>
-</ThemeProvider>
+      </Dialog>
+                  </>
+                )}
+              </>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
+  </ThemeProvider>
 );
 }
 
