@@ -224,7 +224,7 @@ export function Auth({ onSkip, darkMode }) {
                 color="primary"
                 onClick={signUp}
                 fullWidth
-                sx={{ backgroundColor: theme.palette.text.secondary, color: theme.palette.primary.contrastText }}
+                sx={{ backgroundColor: theme.palette.background.secondary, color: theme.palette.primary.contrastText }}
                 disabled={loading}  // disable button during signup
             >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
