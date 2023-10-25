@@ -756,6 +756,7 @@ const handleThemeToggle = () => {
     <Button
       key={index}
       variant="contained"
+      className="theme-button"
       style={{
         margin: '5px',
         width: '150px',
@@ -807,7 +808,7 @@ return (
         <WelcomePage onGetStarted={handleGetStarted} />
       ) : (
         <>
-          <AppBar position="static" style={{ backgroundColor: theme.palette.background.paper }}>
+<AppBar position="static" style={{ width: '100%', margin: 0, padding: 0, backgroundColor: theme.palette.background.paper }}>
   <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="h5" style={{ flexGrow: 1, paddingLeft: '7%'}}>
       Pomotivity

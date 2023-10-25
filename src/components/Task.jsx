@@ -18,13 +18,8 @@ export function Task({ task, onDelete, onUpdate, onComplete }) {
 
     const isCompleted = task.completed || false; // Ensure it's false if it's null
     
-    const getTextColorBasedOnBgColor = (bgColor) => {
-        const luminance = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        const rgb = bgColor.match(/.{1,2}/g).map(hex => parseInt(hex, 16));
-        return luminance(...rgb) > 127 ? 'black' : 'white';
-    };
 
-    const textColor = getTextColorBasedOnBgColor(theme.palette.primary.main.replace("#", ""));
+    const textColor = theme.palette.background.paper;
 
     return (
         <div className="task-index">

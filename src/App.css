@@ -135,62 +135,116 @@ header {
     margin-bottom: 30px;
 }
 
-/* Default styles for larger screens are already defined in your CSS */
-
-/* Media Query for Mobile Devices */
-@media (max-width: 480px) {
-   .App {
-       flex-direction: column;
-   }
-
-   .timer-section, 
-   .tasks-section, 
-   .music-section {
-       width: 100%;
-   }
-
-   .tasks-box {
-       position: static;
-       width: 100%;
-       height: auto;
-       margin-top: 20px;
-   }
-
-   .pomodoro-section {
-       position: static;
-       width: 100%;
-   }
-
-   .task-index {
-       margin: 10px 0;
-   }
+.authBox {
+    width: 50%;
+    padding: 3.5rem;
 }
 
+
+/* Default styles for larger screens are already defined in your CSS */
+
+
+/* Media Query for Mobile Devices */
+
+@media (max-width: 480px) {
+    .App {
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+    }
+    .app-toolbar {
+        width: 100%;
+        margin: 0;
+        padding: 0 5px;
+    }
+    .timer-section,
+    .tasks-section,
+    .music-section {
+        width: 100%;
+    }
+    .tasks-box {
+        position: static;
+        width: 100%;
+        max-height: 350px;
+        overflow-y: auto;
+        margin-top: 20px;
+    }
+    .pomodoro-section {
+        position: static;
+        width: 100%;
+        font-size: 0.8rem;
+        padding-right: 15px;
+    }
+    .task-index {
+        margin: 10px 0;
+    }
+    .MuiTypography-h5 {
+        font-size: 1rem;
+    }
+    .pomodoro-section .MuiTypography-h2 {
+        font-size: 90px;
+    }
+    .pomodoro-section .MuiCircularProgress-root {
+        width: 325px !important;
+        height: 325px !important;
+    }
+    .settings-section {
+        width: 50%;
+        padding: 5px;
+    }
+    theme-button {
+        height: 40px;
+        width: 100px;
+        font-size: 10px;
+    }
+}
+
+
 /* Media Query for Tablet Devices */
+
 @media (min-width: 481px) and (max-width: 768px) {
-   .App {
-       flex-direction: column;
-   }
-
-   .timer-section, 
-   .tasks-section, 
-   .music-section {
-       width: 100%;
-   }
-
-   .tasks-box {
-       position: static;
-       width: 100%;
-       height: auto;
-       margin-top: 20px;
-   }
-
-   .pomodoro-section {
-       position: static;
-       width: 100%;
-   }
-
-   .task-index {
-       margin: 15px 0;
-   }
+    .App {
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+    }
+    .app-toolbar {
+        width: 100%;
+        margin: 0;
+        padding: 0 5px;
+    }
+    .timer-section,
+    .tasks-section,
+    .music-section {
+        width: 100%;
+    }
+    .tasks-box {
+        position: static;
+        width: 100%;
+        max-height: 225px;
+        overflow-y: auto;
+        margin-top: 20px;
+    }
+    .pomodoro-section {
+        position: static;
+        width: 100%;
+        font-size: 0.8rem;
+    }
+    .task-index {
+        margin: 10px 0;
+    }
+    .MuiTypography-h5 {
+        font-size: 1rem;
+    }
+    .pomodoro-section .MuiTypography-h2 {
+        font-size: 90px;
+    }
+    .pomodoro-section .MuiCircularProgress-root {
+        width: 325px !important;
+        height: 325px !important;
+    }
+    .authBox {
+        width: 70%;
+        padding: 2.5rem;
+    }
 }
