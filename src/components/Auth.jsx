@@ -127,7 +127,7 @@ export function Auth({ onSkip, darkMode }) {
 
     return (
         
-        <Box component="form" autoComplete="off" sx={{
+        <Box component="form" autoComplete="off"  className="authBox" sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

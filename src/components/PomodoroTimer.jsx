@@ -4,6 +4,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { CircularProgress, Box, Typography } from '@mui/material';
+import '../App.css';
 
 const PomodoroTimer = ({ timerLength, breakLength }) => {
   const [timeInSeconds, setTimeInSeconds] = useState(timerLength * 60);

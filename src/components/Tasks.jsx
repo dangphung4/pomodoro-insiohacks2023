@@ -141,12 +141,12 @@ export function Tasks({ user }) {
           label="Title"
           InputProps={{
             style: {
-              color: isDarkMode ? 'white' : 'white',
+              color: isDarkMode ? 'white' : 'black',
             },
           }}
           InputLabelProps={{
             style: {
-              color: isDarkMode ? 'white' : 'white',
+              color: isDarkMode ? 'white' : 'black',
             },
             shrink: true // This ensures the label always remains in the 'shrunken' state
           }}
@@ -158,12 +158,12 @@ export function Tasks({ user }) {
           label="Description"
           InputProps={{
             style: {
-              color: isDarkMode ? 'white' : 'white',
+              color: isDarkMode ? 'white' : 'black',
             },
           }}
           InputLabelProps={{
             style: {
-              color: isDarkMode ? 'white' : 'white',
+              color: isDarkMode ? 'white' : 'black',
               marginTop: '10px' // Provides a bit of spacing between the fields
             },
             shrink: true // This ensures the label always remains in the 'shrunken' state
