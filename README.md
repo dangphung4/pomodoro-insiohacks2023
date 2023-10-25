@@ -24,7 +24,7 @@ Pomodoro Study App is a productivity tool designed for students and professional
 - **Task Management**: Add, edit, and delete tasks that you wish to focus on.
 - **Music Player**: Play a curated Lo-Fi playlist, or configure your own playlist from Youtube.
 - **User Authentication**: Secure login and sign-up functionality powered by Supabase.
-
+- **Customizability: Over 70+ themes and presets tailored for your own needs.
 ## Technologies Used
 - **Frontend**: React with Vite
 - **Backend**: Node.js with Express
