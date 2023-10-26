@@ -65,7 +65,7 @@ export function Auth({ onSkip, darkMode }) {
             setSnackbarOpen(true);  // open snackbar
         } else {
             setMessage('Login successful!');  // set success message
-            setSnackbarOpen(true);  // open snackbar
+            setSnackbarOpen(false);  // open snackbar
         }
     }
 

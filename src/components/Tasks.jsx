@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { Task } from "./Task";
 import { Button, TextField } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+import Slide from "@mui/material/Slide";
+import Zoom from "@mui/material/Zoom";
+import Fade from "@mui/material/Fade";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
@@ -10,6 +13,7 @@ export function Tasks({ user }) {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [deletingTasks, setDeletingTasks] = useState({});
 
   const fetchTasks = async () => {
     console.log("Current User: ", user); // Directly log the user object
@@ -60,17 +64,28 @@ export function Tasks({ user }) {
   };
 
   const deleteTask = async (id) => {
-    if (user) {
-      // For authenticated users, delete the task from the database
-      await supabase.from("tasks").delete().eq("id", id);
-    } else {
-      // For guest users, delete the task from local storage
-      const guestTasks = JSON.parse(localStorage.getItem("guestTasks")) || [];
-      const updatedGuestTasks = guestTasks.filter((task) => task.id !== id);
-      localStorage.setItem("guestTasks", JSON.stringify(updatedGuestTasks));
-    }
+    // Mark the task as being deleted
+    setDeletingTasks((prev) => ({ ...prev, [id]: true }));
 
-    fetchTasks();
+    setTimeout(async () => {
+      // Actual delete logic after the zoom-out animation is complete
+      if (user) {
+        await supabase.from("tasks").delete().eq("id", id);
+      } else {
+        const guestTasks = JSON.parse(localStorage.getItem("guestTasks")) || [];
+        const updatedGuestTasks = guestTasks.filter((task) => task.id !== id);
+        localStorage.setItem("guestTasks", JSON.stringify(updatedGuestTasks));
+      }
+
+      // Update the tasks state directly instead of re-fetching all tasks
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+
+      setDeletingTasks((prev) => {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      });
+    }, 250); // Adjust the duration to match the animation duration (default is 300ms for Zoom)
   };
 
   // console.log(id);
@@ -127,9 +142,7 @@ export function Tasks({ user }) {
   };
 
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === 'dark';
-
-
+  const isDarkMode = theme.palette.mode === "dark";
 
   return (
     <div className="tasks tasks-box">
@@ -141,14 +154,14 @@ export function Tasks({ user }) {
           label="Title"
           InputProps={{
             style: {
-              color: isDarkMode ? 'white' : 'black',
+              color: isDarkMode ? "white" : "black",
             },
           }}
           InputLabelProps={{
             style: {
-              color: isDarkMode ? 'white' : 'black',
+              color: isDarkMode ? "white" : "black",
             },
-            shrink: true // This ensures the label always remains in the 'shrunken' state
+            shrink: true, // This ensures the label always remains in the 'shrunken' state
           }}
         />
         <TextField
@@ -158,24 +171,28 @@ export function Tasks({ user }) {
           label="Description"
           InputProps={{
             style: {
-              color: isDarkMode ? 'white' : 'black',
+              color: isDarkMode ? "white" : "black",
             },
           }}
           InputLabelProps={{
             style: {
-              color: isDarkMode ? 'white' : 'black',
-              marginTop: '10px' // Provides a bit of spacing between the fields
+              color: isDarkMode ? "white" : "black",
+              marginTop: "10px", // Provides a bit of spacing between the fields
             },
-            shrink: true // This ensures the label always remains in the 'shrunken' state
+            shrink: true, // This ensures the label always remains in the 'shrunken' state
           }}
-          style={{ marginTop: '10px' }} // Adds a bit of spacing after the Title TextField
+          style={{ marginTop: "10px" }} // Adds a bit of spacing after the Title TextField
         />
-        <div style={{ marginTop: '10px' }}>
-          <Button fullWidth startIcon={<AddCircleOutlineIcon />} onClick={addTask}
+        <div style={{ marginTop: "10px" }}>
+          <Button
+            fullWidth
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={addTask}
             style={{
               backgroundColor: theme.palette.secondary.main,
               color: theme.palette.text.primary,
-            }}>
+            }}
+          >
             Add Task
           </Button>
         </div>
@@ -186,16 +203,19 @@ export function Tasks({ user }) {
             a.completed === b.completed ? 0 : a.completed ? 1 : -1
           )
           .map((task) => (
-            <Task
-              key={task.id}
-              task={task}
-              onDelete={deleteTask}
-              onUpdate={updateTask}
-              onComplete={completeTask}
-            />
+            <Zoom in={!deletingTasks[task.id]} key={task.id}>
+              <div>
+                <Task
+                  task={task}
+                  onDelete={deleteTask}
+                  onUpdate={updateTask}
+                  onComplete={completeTask}
+                />
+              </div>
+            </Zoom>
           ))}
       </div>
     </div>
-);
+  );
 }
 export default Tasks;
