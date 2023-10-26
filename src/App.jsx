@@ -9,6 +9,13 @@ import { supabase } from "./supabaseClient";
 import WelcomePage from "./components/WelcomePage";
 import MusicPlayer from "./components/MusicPlayer";
 import ResetPassword from './components/ResetPassword';  
+import Slide from '@mui/material/Slide';
+
+
+import Grow from '@mui/material/Grow';
+import Fade from '@mui/material/Fade';
+import Zoom from '@mui/material/Zoom';
+
 
 import {
   ThemeProvider,
@@ -833,12 +840,18 @@ return (
             element={
               <>  
       {showWelcome ? (
-        <WelcomePage onGetStarted={handleGetStarted} />
+        <Zoom in={true} timeout={500}> 
+        <div>
+                      <WelcomePage onGetStarted={handleGetStarted} />
+                    </div>
+        </Zoom>
       ) : (
         <>
+        <Slide direction="down" in={true} mountOnEnter unmountOnExit>
+
 <AppBar position="static" style={{ width: '100%', margin: 0, padding: 0, backgroundColor: theme.palette.background.paper }}>
   <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h5" style={{ flexGrow: 1, paddingLeft: '7%'}}>
+  <Typography variant="h5" style={{ flexGrow: 1, paddingLeft: '7%', color: theme.palette.text.primary}}>
       Pomotivity
     </Typography>
     <IconButton color="primary" onClick={handleThemeToggle}>
@@ -862,19 +875,25 @@ return (
           </IconButton>
             </Toolbar>
           </AppBar>
+          </Slide>
+
           <div className="main-content">
-          <div className="timer-section">
-            {guest || session ? (
-              <PomodoroTimer
-                key={timerLength}
-                timerLength={timerLength}
-                breakLength={breakLength}
-              />
-            ) : null}
-          </div>
-          <div className="tasks-section">
-            {guest || session ? <Tasks user={user} /> : null}
-          </div>
+
+          <Fade in={guest || session}>
+  <div className="timer-section">
+    <PomodoroTimer
+      key={timerLength}
+      timerLength={timerLength}
+      breakLength={breakLength}
+    />
+  </div>
+</Fade>
+
+<Fade in={guest || session}>
+  <div className="tasks-section">
+    <Tasks user={user} />
+  </div>
+</Fade>
         </div>
         <div className="music-section" style={{ backgroundColor: theme.palette.background.paper }}>
           {guest || session ? ( // Conditionally render MusicPlayer
@@ -888,22 +907,29 @@ return (
         </div>
 
         <Dialog
-          open={authDialogOpen}
-          onClose={() => {
-            if (session || guest) {
-              handleCloseAuthDialog();
-            }
-          }}
-          maxWidth="100%"
-          disableBackdropClick={!session && !guest}
-          disableEscapeKeyDown={!session && !guest}
-        >
-          <Auth onSkip={handleSkip} guestMode={guest} darkMode={darkMode} />
-        </Dialog>
+  open={authDialogOpen}
+  onClose={() => {
+    if (session || guest) {
+      handleCloseAuthDialog();
+    }
+  }}
+  maxWidth="100%"
+  disableBackdropClick={!session && !guest}
+  disableEscapeKeyDown={!session && !guest}
+  TransitionComponent={Slide}
+  transitionDuration={{ enter: 300, exit: 300 }} // Adjust if needed
+>
+  <Auth onSkip={handleSkip} guestMode={guest} darkMode={darkMode} />
+</Dialog>
 
-        <Dialog open={settingsOpen} onClose={handleCloseSettings} BackdropProps={{ 
-       style: { backgroundColor: 'rgba(0, 0, 0, 0.2)' } 
-   }}>
+
+<Dialog
+  open={settingsOpen}
+  onClose={handleCloseSettings}
+  BackdropProps={{ style: { backgroundColor: 'rgba(0, 0, 0, 0.2)' } }}
+  TransitionComponent={Zoom} // Using the Grow transition here
+  transitionDuration={{ enter: 400, exit: 400 }} // Optional: Adjust as per your needs
+>
       <DialogTitle >Settings</DialogTitle>
       <DialogContent>
         <Typography variant="h6" style={{fontWeight:"600"}} gutterBottom>
