@@ -751,27 +751,55 @@ const handleThemeToggle = () => {
     setGuest(false);
   };
 
- const renderThemeOptions = () => {
-  return THEMES.map((theme, index) => (
-    <Button
-      key={index}
-      variant="contained"
-      className="theme-button"
-      style={{
+  const renderThemeOptions = () => {
+    return THEMES.map((theme, index) => {
+      // Common styles
+      let styles = {
         margin: '5px',
-        width: '150px',
-        height: '50px',
         fontSize: '11.5px',
         backgroundColor: darkMode ? theme.dark.primary : theme.light.primary,
         color: darkMode ? theme.dark.text : theme.light.text,
-      }}
-      onClick={() => setTempSelectedTheme(theme)}  // update tempSelectedTheme on click
-
-    >
-      {theme.name}
-    </Button>
-  ));
-};
+      };
+  
+      // Determine viewport width
+      const width = window.innerWidth;
+  
+      // Apply styles based on the viewport width
+      if (width <= 480) {
+        // Styles for max-width: 480px
+        Object.assign(styles, {
+          width: '85px',   // example sizes, adjust as needed
+          height: '35px',
+          fontSize: '9.5px',
+        });
+      } else if (width > 480 && width <= 768) {
+        // Styles for min-width: 481px and max-width: 768px
+        Object.assign(styles, {
+          width: '130px',   // example sizes, adjust as needed
+          height: '45px',
+          fontSize: '9.5px',
+        });
+      } else {
+        // Default styles (for screens larger than 768px)
+        Object.assign(styles, {
+          width: '150px',
+          height: '50px',
+        });
+      }
+  
+      return (
+        <Button
+          key={index}
+          variant="contained"
+          className="theme-button"
+          style={styles}
+          onClick={() => setTempSelectedTheme(theme)}  // update tempSelectedTheme on click
+        >
+          {theme.name}
+        </Button>
+      );
+    });
+  };
 
   function isLight(color) {
     const r = parseInt(color.slice(1, 3), 16);

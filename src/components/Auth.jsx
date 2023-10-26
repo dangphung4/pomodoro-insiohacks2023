@@ -131,7 +131,6 @@ export function Auth({ onSkip, darkMode }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '500px',
             padding: '3.5rem',
             borderRadius: '5px',
             boxShadow: darkMode ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)',

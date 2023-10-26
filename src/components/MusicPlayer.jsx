@@ -194,6 +194,7 @@ const handlePlayPause = () => {
       />
 
       <Card
+      className="music-player-card"
         style={{
           display: "flex",
           padding: "10px",
@@ -203,6 +204,7 @@ const handlePlayPause = () => {
         }}
       >
         <CardMedia
+            className="music-player-thumbnail"
           component="img"
           image={currentTrack?.snippet?.thumbnails?.medium?.url || ""}
           alt={currentTrack?.snippet?.title || ""}
@@ -258,6 +260,8 @@ const handlePlayPause = () => {
           />
 
           <Typography
+              className="music-player-title"
+
             variant="subtitle1"
             style={{
               whiteSpace: "nowrap",
@@ -275,6 +279,8 @@ const handlePlayPause = () => {
           </Typography>
 
           <Grid
+              className="music-controls-grid"
+
             container
             alignItems="center"
             spacing={2}
