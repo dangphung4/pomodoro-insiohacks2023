@@ -1007,7 +1007,7 @@ function App() {
                           style: { backgroundColor: "rgba(0, 0, 0, 0.2)" },
                         }}
                         TransitionComponent={Fade} // Using the Grow transition here
-                        transitionDuration={{ enter: 400, exit: 400 }} // Optional: Adjust as per your needs
+                        transitionDuration={{ enter: 300, exit: 300 }} // Optional: Adjust as per your needs
                       >
                         <DialogTitle>Settings</DialogTitle>
                         <DialogContent>
